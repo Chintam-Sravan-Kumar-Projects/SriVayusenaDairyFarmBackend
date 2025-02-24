@@ -4,6 +4,10 @@ const { connection } = require("./src/connection/db");
 const { customerRouter } = require("./src/Customer/customerRoutes");
 const { AdminRouter } = require("./src/Admin/adminRoutes");
 const { MilkRouter } = require("./src/Milk/milkRoutes");
+const { producedmilkRouter } = require("./src/ProducedMilk/producedmilkRoutes");
+const { cowRouter } = require("./src/cow/cowRoutes");
+const { expenseRouter } = require("./src/Expenses/expensesRoutes");
+const { healthRouter } = require("./src/health/healthRoutes");
 const { transporter } = require("./src/connection/mailConnection");
 const rateRouter = require("./src/Milk/RateSetting/rateSettingRoutes");
 
@@ -26,14 +30,17 @@ app.use("/api/admin",AdminRouter);
 app.use("/api/customer",customerRouter);
 app.use("/api/milk",MilkRouter)
 app.use("/api/rate",rateRouter);
-
+app.use("/api/cow",cowRouter);
+app.use("/api/producedmilk",producedmilkRouter);
+app.use("/api/expense",expenseRouter);
+app.use("/api/health",healthRouter);
 //server
 app.listen(PORT, async ()=>{
     try {
         await connection
          
         console.log("DB connected successfully")
-        console.log(`Server is running on port ${PORT}`)
+        console.log(`Server is running`)
         transporter.verify(function (error, success) {
             if (error) {
               console.log(error);

@@ -3,7 +3,6 @@ const { rateSettingModel } = require("./rateSetting.model");
 
 exports.createOrUpdateRateSetting = async (req, res) => {
     const { milkCategory, ratePerFat, additionalRateFactors,status } = req.body;
-    //console.log(req.body)
     try {
         // if(!milkCategory || !ratePerFat || !status)
         // {

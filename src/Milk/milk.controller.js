@@ -8,23 +8,29 @@ const { rateSettingModel } = require("./RateSetting/rateSetting.model");
 
 
 exports.addMilkData = async (req, res) => {
-    const { category, litter } = req.body;
+    const { dateTime, category, litter } = req.body;
     const { id } = req.params;
-
     try {
-        if (!category || litter === undefined || litter === null || isNaN(litter)) {
+        if (!dateTime || !category || litter === undefined || litter === null || isNaN(litter)) {
             return res.status(400).json({ message: "Missing required fields" });
         }
 
         const customer = await customerModel.findOne({ _id: id, adminId: req.admin.id });
         if (!customer) {
-            return res.status(404).json({ message: "customer not found!" });
+            return res.status(404).json({ message: "Customer not found!" });
         }
 
         const { name, email, mobile } = customer;
-        
-        const shift = new Date().getHours() < 12 ? "morning" : "evening";
-        const date = new Date().toLocaleDateString("en-IN", {
+
+        // Parse dateTime and determine shift
+        const providedDate = new Date(dateTime);
+        if (isNaN(providedDate)) {
+            return res.status(400).json({ message: "Invalid dateTime format" });
+        }
+
+        const shift = providedDate.getHours() < 12 ? "morning" : "evening";
+
+        const formattedDate = providedDate.toLocaleDateString("en-IN", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
@@ -35,7 +41,6 @@ exports.addMilkData = async (req, res) => {
             hour12: true,
         });
 
-        console.log(date)
         const rateSetting = await rateSettingModel.findOne({ adminId: req.admin.id, milkCategory: category });
         if (!rateSetting) {
             return res.status(400).json({ message: `Rate settings for ${category} not found` });
@@ -54,7 +59,7 @@ exports.addMilkData = async (req, res) => {
             customerId: id,
             ...req.body,
             shift,
-            date,
+            date: formattedDate,  // Using the provided date
             rate,
             calculatedAmount,
             mobile,
@@ -62,7 +67,6 @@ exports.addMilkData = async (req, res) => {
 
         const savedMilkData = await customerMilkCollection.save();
         req.milkdata = { ...savedMilkData._doc, name, email, litter };
-
         sendMail(req, res, () => {
             return res.status(200).json({ message: "Milk data submitted", milk: savedMilkData });
         });
@@ -70,6 +74,7 @@ exports.addMilkData = async (req, res) => {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 
 
 
@@ -85,7 +90,6 @@ exports.getSinglecustomerMilkData = async (req, res) => {
         .exec();
 		
 		const Admin=
-        console.log(UserMilkData);
 		res.status(200).send({
 			total_entries: UserMilkData.length,
 			data: UserMilkData,

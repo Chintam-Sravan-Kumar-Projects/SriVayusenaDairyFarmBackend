@@ -1,32 +1,30 @@
 const express = require("express");
 
-const { customerModel } = require("./customer.model");
+const { cowModel } = require("./cow.model");
 
 // POST request to create a new milk provider
 
-exports.createcustomer = async (req, res) => {
+exports.createcow = async (req, res) => {
 	try {
-		const {  mobile } = req.body;
-		
+		const { name } = req.body;
 		// Check if the user already exists
-		const iscustomer = await customerModel.findOne({
-			mobile,
+		const iscow = await cowModel.findOne({
+			name,
 			adminId: req.admin.id,
 		});
 
-		if (iscustomer) {
+		if (iscow) {
 			// User already exists, send a 409 Conflict response
-			return res.status(200).json({ message: "customer already exists with same mobile number. " });
+			return res.status(200).json({ message: "cow already exists with same name." });
 		}
 
 		
     // Create a new milk provider customer
-    const customer= new customerModel({...req.body,adminId: req.admin.id});
-    const newcustomer=await customer.save();
-
+    const cow= new cowModel({...req.body,adminId: req.admin.id});
+    const newcow=await cow.save();
 		     res
 			.status(200)
-			.send({ msg: "New customer added successfully", newcustomer });
+			.send({ msg: "New cow added successfully", newcow });
 	} catch (error) {
 		// Handle other errors and send a 500 Internal Server Error response
 
@@ -36,12 +34,12 @@ exports.createcustomer = async (req, res) => {
 
 //get all users without pagination
 
-exports.getAllcustomer=async(req,res)=>{
+exports.getAllcows=async(req,res)=>{
 
   try {
-    const customers= await customerModel.find({adminId:req.admin.id});
+    const cows= await cowModel.find({adminId:req.admin.id});
    
-      res.status(200).json({"count":customers.length,customers})
+      res.status(200).json({"count":cows.length,cows})
     
   } catch (error) {
     res.status(500).json({"message":"Something wen't wrong",error:error.message})
@@ -51,7 +49,7 @@ exports.getAllcustomer=async(req,res)=>{
 //get all user / pagination
 
 
-exports.getAllcustomerWithPagination = async (req, res) => {
+exports.getAllcowsWithPagination = async (req, res) => {
 	try {
 		const page = parseInt(req.query.page) || 1;
 		const pageSize = parseInt(req.query.pageSize) || 10;
@@ -61,14 +59,14 @@ exports.getAllcustomerWithPagination = async (req, res) => {
 		const skip = (page - 1) * pageSize;
 		
 		// Query the database with pagination
-		const usersEntries = await customerModel
+		const usersEntries = await cowModel
 			.find({})
 			.skip(skip)
 			.limit(pageSize)
 			.sort({ date: _sort }); // Optionally, you can sort the entries by date
 
 		// Count total number of entries for pagination
-		const totalEntries = await customerModel.countDocuments({});
+		const totalEntries = await cowModel.countDocuments({});
 
 		// Calculate total pages
 		const totalPages = Math.ceil(totalEntries / pageSize);
@@ -89,27 +87,27 @@ exports.getAllcustomerWithPagination = async (req, res) => {
 };
 
 // find user by thire userId and mobile number
-exports.getSinglecustomer = async (req, res) => {
+exports.getSinglecow = async (req, res) => {
 	try {
 		const { id } = req.params;
 
 		// Find a user by name or mobile number
-		const customer = await customerModel.find({
+		const cow = await cowModel.find({
 			adminId: req.admin.id,
 		    _id: id 
 		});
 
-		res.status(200).json({message:"success",customer});
+		res.status(200).json({message:"success",cow});
 
 	} catch (error) {
 		res.status(500).json({"message":"server error", error: error.message });
 	}
 };
 
-exports.updatecustomer = async (req, res) => {
+exports.updatecow = async (req, res) => {
     try {
-        const customer = await customerModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.status(200).json({message:"success",customer});
+        const cow = await cowModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).json({message:"success",cow});
     } catch (error) {
         console.error(err.message);
         res.status(500).send({"message":'Server Error',error:error.message});
@@ -117,14 +115,14 @@ exports.updatecustomer = async (req, res) => {
 };
 
 // delete user by mobile number
-exports.deletecustomer = async (req, res) => {
+exports.deletecow = async (req, res) => {
     try {
-        const deletecustomer=await customerModel.deleteOne({
+        const deletecow=await cowModel.deleteOne({
 				_id: req.params.id,
 				adminId: req.admin.id,
 			});
 
-        res.status(200).json({ message: 'customer deleted',customer:deletecustomer,id:req.params.id});
+        res.status(200).json({ message: 'cow deleted',cow:deletecow,id:req.params.id});
     } catch (error) {
         
         res.status(500).send({"message":'Server Error',error:error.message});

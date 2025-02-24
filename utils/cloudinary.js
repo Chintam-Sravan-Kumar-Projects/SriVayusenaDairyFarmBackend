@@ -21,11 +21,9 @@ cloudinary.config({
         });
 
         // file has been uploaded successfully
-        console.log("file is uplaoded on cloudinary",response);
         return response;
     } catch (error) {
         fs.unlinkSync(localFilepath)  //remove the locally saved teporary file as the upload operation got faile
-        console.log(error.message)
         return null;
     }
   }

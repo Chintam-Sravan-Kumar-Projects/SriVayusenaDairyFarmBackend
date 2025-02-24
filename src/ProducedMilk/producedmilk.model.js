@@ -1,22 +1,17 @@
 const mongoose = require("mongoose");
 
-const milkSchema = new mongoose.Schema(
+const producedmilkSchema = new mongoose.Schema(
   {
     adminId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Admin",
 			required: true,
 		},
-    customerId: {
+    cowId: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "customer",
+			ref: "cow",
 			required: true,
 		},
-    mobile: {
-      type: Number,
-      default:0,
-      
-    },
     shift:{    
         type:String,   // auto update based on time
         require:[true, "Please Specify shift"],
@@ -24,24 +19,8 @@ const milkSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Cow", "Buffalo"],
-      default: "cow",
-    },
-    snf: {
-      type: Number,
-      //required: [true, "SNF Required"],
-    },
-    fat: {
-      type: Number,
-      //required: [true, "FAT Required"],
-    },
-    water: {
-      type: Number,
-      default: 0.0,
-    },
-    degree:{
-      type:Number,
-      default:0.0,
+      enum: ["cow", "buffalo", "goat"],
+      default: "buffalo",
     },
     litter: {
       type: Number,
@@ -55,7 +34,7 @@ const milkSchema = new mongoose.Schema(
     
     rate: {
       type: Number,
-      required: true
+      //required: true
   },
   calculatedAmount: {
       type: Number,
@@ -71,9 +50,9 @@ const milkSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const MilkModel = mongoose.model("Milk", milkSchema);
+const producedmilkModel = mongoose.model("ProducedMilk", producedmilkSchema);
 
 module.exports = {
-  MilkModel,
+  producedmilkModel,
 };
 

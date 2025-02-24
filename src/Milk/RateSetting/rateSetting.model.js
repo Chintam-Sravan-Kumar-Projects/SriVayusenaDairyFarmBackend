@@ -8,7 +8,7 @@ const RateSettingSchema = new mongoose.Schema({
     },
     milkCategory: {
         type: String,
-        enum: ['cow', 'buffalo', 'sheep', 'goat'] ,// Add more categories as needed
+        enum: ['Cow', 'Buffalo'] ,// Add more categories as needed
         default:"cow",
         required: true
     },
@@ -25,12 +25,6 @@ const RateSettingSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    status:{
-        type:String,
-        enum:['Active','Inactive'],
-        default:'Active',
-        required:true,
-    }
 },{
     timestamps:true,
 });
