@@ -23,7 +23,6 @@ const adminSchema = new mongoose.Schema(
       type: String,
       required: true,
       message: "Shop  name should be required.",
-      maxlength: "20",
     },
     mobile: {
       type: String,
