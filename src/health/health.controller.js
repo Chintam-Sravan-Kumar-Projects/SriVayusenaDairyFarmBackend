@@ -61,8 +61,8 @@ exports.addhealthData = async (req, res) => {
         adminId: req.admin.id,
         cowId: id,
         ...req.body,
-        duedate: formatteddueDate, // will be empty string if not provided
-        date: formattedDate,      // Using the provided dateTime
+        duedate: duedate ? new Date(duedate) : "", // Store as raw Date (UTC)
+    	date: new Date(dateTime),      // Using the provided dateTime
       });
   
       const savedhealthData = await cowhealthCollection.save();
