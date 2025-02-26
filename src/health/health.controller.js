@@ -5,6 +5,9 @@ const { cowModel } = require("../cow/cow.model");
 
 exports.addhealthData = async (req, res) => {
     const { duedate, dateTime, title } = req.body;
+	
+    console.log("datetime",dateTime);
+    console.log("duedate",duedate)
     const { id } = req.params;
     try {
       // Check only for required fields (excluding duedate)
