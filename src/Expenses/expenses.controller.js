@@ -21,7 +21,6 @@ exports.addexpenseData = async (req, res) => {
             hour: "2-digit",
             minute: "2-digit",
             second: "2-digit",
-            timeZone: "Asia/Kolkata",
             hour12: true,
         });
 
