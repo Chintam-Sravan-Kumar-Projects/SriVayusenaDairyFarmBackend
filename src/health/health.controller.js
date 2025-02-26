@@ -61,8 +61,12 @@ exports.addhealthData = async (req, res) => {
         adminId: req.admin.id,
         cowId: id,
         ...req.body,
-        duedate: duedate ? new Date(duedate) : "", // Store as raw Date (UTC)
-    	date: new Date(dateTime),      // Using the provided dateTime
+        const cowhealthCollection = new healthModel({
+    adminId: req.admin.id,
+    cowId: id,
+    ...req.body,
+    duedate: duedate ? new Date(duedate + "Z") : null, // Force UTC
+    date: new Date(dateTime + "Z"), // Force UTC    // Using the provided dateTime
       });
   
       const savedhealthData = await cowhealthCollection.save();
