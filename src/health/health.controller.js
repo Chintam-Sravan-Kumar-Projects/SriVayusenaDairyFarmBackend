@@ -65,7 +65,7 @@ exports.addhealthData = async (req, res) => {
     adminId: req.admin.id,
     cowId: id,
     ...req.body,
-    duedate: duedate ? new Date(duedate + "Z") : null, // Force UTC
+    duedate: duedate ? new Date(duedate + "Z") : "", // Force UTC
     date: new Date(dateTime + "Z"), // Force UTC    // Using the provided dateTime
       });
   
